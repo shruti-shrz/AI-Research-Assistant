@@ -1,0 +1,17 @@
+# secrets
+.env
+
+# python
+backend/.venv/
+__pycache__/
+*.pyc
+
+# local data (SQLite database and uploaded PDFs)
+backend/data/
+
+# node
+frontend/node_modules/
+frontend/dist/
+
+# assignment handout
+hw1.pdf
