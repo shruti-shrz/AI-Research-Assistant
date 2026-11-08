@@ -15,3 +15,13 @@ frontend/dist/
 
 # assignment handout
 hw1.pdf
+
+# test output
+backend/.coverage
+backend/.pytest_cache/
+frontend/coverage/
+
+# local files not part of the repo
+AISE Project.pdf
+paper.pdf
+HW2_Test_Report.pdf

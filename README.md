@@ -112,6 +112,64 @@ Search, saving and browsing work without an API key. Summaries and questions nee
 key. Uploading without a key still works, but the metadata is then guessed from the PDF
 with simple rules and is less accurate.
 
+## Testing
+
+The unit test suite lives in two places:
+
+```
+backend/tests/                 pytest suite (155 tests)
+  conftest.py                  shared fixtures (temporary SQLite database)
+  test_arxiv.py                search query building, XML parsing, HTTP errors
+  test_db.py                   papers and chat messages CRUD
+  test_pdf.py                  text extraction and metadata guessing
+  test_llm.py                  Claude calls, error conversion, JSON parsing
+  test_main.py                 all 9 HTTP endpoints through TestClient
+backend/pytest.ini             pytest configuration (asyncio_mode = auto)
+backend/requirements-test.txt  test-only dependencies
+frontend/src/__tests__/
+  api.test.js                  vitest suite for src/api.js (26 tests)
+frontend/vite.config.js        vitest + coverage configuration (test block)
+```
+
+No test makes a network call or needs an API key: httpx, the Anthropic SDK and
+`fetch` are mocked, and every database test runs against a temporary SQLite file.
+
+### Backend
+
+From `backend/` with the virtual environment active:
+
+```
+pip install -r requirements.txt -r requirements-test.txt
+python -m pytest -v
+```
+
+Coverage with branch coverage:
+
+```
+python -m pytest --cov=app --cov-branch --cov-report=term-missing
+```
+
+Expected result: 155 passed, 99% coverage (353/353 statements). The one partial branch,
+`db.py` 67->69, is unreachable code.
+
+### Frontend
+
+From `frontend/`:
+
+```
+npm install
+npm test
+```
+
+Coverage:
+
+```
+npm run test:coverage
+```
+
+Expected result: 26 passed, 100% statement, branch, function and line coverage of
+`src/api.js`. An HTML/lcov report is written to `frontend/coverage/`.
+
 ## Notes and limits
 
 - Search covers arXiv only.
